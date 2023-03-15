@@ -81,7 +81,8 @@ const SearchEngine = () => {
 
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (e, id) => {
+    e.stopPropagation();
     const newArrayPreviousSearches = previousSearches.filter((obj) => {
       return obj.id !== id
     })
@@ -126,7 +127,7 @@ const SearchEngine = () => {
                   >
                     <i className="bi bi-search"></i>
                     <span style={result.selected ? { marginLeft: '10px', color: 'red' } : { marginLeft: '10px' }}>{result.title}</span>
-                    {result.selected && <span className='removeButton' onClick={() => { handleDelete(result.id) }}><i className="bi bi-x"></i></span>}
+                    {result.selected && <span className='removeButton' onClick={(e) => { handleDelete(e, result.id) }}><i className="bi bi-x"></i></span>}
                   </li>
                 ))}
               </ul>
