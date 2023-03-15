@@ -1,8 +1,22 @@
 import React from 'react';
+import './results.css'
 
-const Results = () => {
+const Results = ({data, timeElapsed}) => {
     return(
-        <div style={{position:'absolute'}}>asd</div>
+        <div className='container'>
+                <hr />
+                <span>около {data.length} резултата за {timeElapsed? timeElapsed: '0'} сек</span>
+                {data.map(el => {
+                    return(
+                        <div key={el.id} className='row justify-content-center wrapper'>
+                            <div className='col-12 col-lg-4'>
+                                <h3 ><a href={el.link}>{el.title}</a></h3>
+                                <span>{el.description}</span>
+                            </div>
+                        </div>
+                    )
+                })} 
+        </div>
     )
 }
 

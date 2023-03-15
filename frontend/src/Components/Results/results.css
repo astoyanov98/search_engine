@@ -1,0 +1,13 @@
+.wrapper {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.wrapper h3 a{
+    color: #1a0dab;
+    text-decoration: none;
+}
+
+.wrapper h3 a:hover{
+    text-decoration: underline;
+}

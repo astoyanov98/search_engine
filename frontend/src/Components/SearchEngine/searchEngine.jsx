@@ -10,6 +10,7 @@ const SearchEngine = () => {
   const [previousSearches, setPreviousSearches] = useState([])
   const [results, setResults] = useState([]);
   const [dbData, setdbData] = useState(db);
+  const [commonSearches, setCommonSearches] = useState({});
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -20,7 +21,7 @@ const SearchEngine = () => {
       // filter the database based on the query
       
       if(previousSearches.length !== 0) {
-          filteredResults = previousSearches.filter((item) => 
+          filteredResults = previousSearches.filter((item) =>
             item.title.toLowerCase().startsWith(value.toLowerCase())
           )
       }
@@ -41,8 +42,23 @@ const SearchEngine = () => {
     }
   };
 
+  const getCommonData = (result) => {
+    let startTime = Date.now();
+
+    const newArr = db.filter(item => {
+      const chunk = item.title.split(' ');
+      return chunk.some(word => result.title.includes(word));
+    });
+
+    const elapsedTime = Date.now() - startTime;
+    return {newArr, elapsedTime};
+  }
+
   const handleResultClick = (result) => {
-    //Checks if the clicked item is already in array previousSearches
+    //When a search is clicked i get all common titles from the db and show them
+    setCommonSearches(getCommonData(result));
+
+     //Checks if the clicked item is already in array previousSearches
     let isAlreadyInPrevSearch = previousSearches.some(obj => obj.title === result.title);
     if(!isAlreadyInPrevSearch){
       //If it is not we delete the certain item from the dbData and adding it to previousSearch
@@ -51,7 +67,7 @@ const SearchEngine = () => {
       const newDB = dbData.filter(obj => obj.id !== idToRemove);
       setdbData(newDB)
     }     
-
+    
     setShowOptions(false);
     setShowResults(true);
     setQuery(result.title);
@@ -60,7 +76,7 @@ const SearchEngine = () => {
   const handleBlur = () => {
     // hide the results on blur
     setTimeout(() => {
-      // setShowOptions(false);
+      setShowOptions(false);
     }, 100)
     
   };
@@ -88,7 +104,7 @@ const SearchEngine = () => {
   return (
     <div className='container'>
         <div className='row justify-content-center '>
-            <div className='col-4 column'>
+            <div className='col-12 col-lg-4 column'>
             <input
                 type="text"
                 value={query}
@@ -97,6 +113,10 @@ const SearchEngine = () => {
                 onBlur={handleBlur}
                 autoFocus
             />
+            </div>
+        </div>
+        <div className='row justify-content-center '>
+            <div className='col-12 col-lg-4 column'>
             {showOptions && (
                 <ul>
                   {results.slice(0, 10).map((result) => (
@@ -112,9 +132,10 @@ const SearchEngine = () => {
                   ))}
                 </ul>
             )}
-            {showResults ? <Results />: ''}
             </div>
-        </div>
+            </div>
+            {showResults ? <Results data={commonSearches.newArr} timeElapsed={commonSearches.timeElapsed}/>: ''}
+            
     </div>
   );
 };
