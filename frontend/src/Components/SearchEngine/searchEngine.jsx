@@ -15,15 +15,15 @@ const SearchEngine = () => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     let filteredResults = [];
-    
+
     setQuery(value);
     if (value.length > 0) {
       // filter the database based on the query
-      
-      if(previousSearches.length !== 0) {
-          filteredResults = previousSearches.filter((item) =>
-            item.title.toLowerCase().startsWith(value.toLowerCase())
-          )
+
+      if (previousSearches.length !== 0) {
+        filteredResults = previousSearches.filter((item) =>
+          item.title.toLowerCase().startsWith(value.toLowerCase())
+        )
       }
 
       const dbFilteredResults = dbData.filter((item) =>
@@ -31,7 +31,7 @@ const SearchEngine = () => {
       );
 
       filteredResults = [...filteredResults, ...dbFilteredResults]
-      
+
       // show the filtered results and enable autocompletion
       setShowOptions(true);
       setResults(filteredResults);
@@ -46,28 +46,28 @@ const SearchEngine = () => {
     let startTime = Date.now();
 
     const newArr = db.filter(item => {
-      const chunk = item.title.split(' ');
+      const chunk = item.title.split(' '); // array with separate words from title property
       return chunk.some(word => result.title.includes(word));
     });
 
     const elapsedTime = Date.now() - startTime;
-    return {newArr, elapsedTime};
+    return { newArr, elapsedTime };
   }
 
   const handleResultClick = (result) => {
     //When a search is clicked i get all common titles from the db and show them
     setCommonSearches(getCommonData(result));
 
-     //Checks if the clicked item is already in array previousSearches
+    //Checks if the clicked item is already in array previousSearches
     let isAlreadyInPrevSearch = previousSearches.some(obj => obj.title === result.title);
-    if(!isAlreadyInPrevSearch){
+    if (!isAlreadyInPrevSearch) {
       //If it is not we delete the certain item from the dbData and adding it to previousSearch
-      setPreviousSearches((prev) => ([...prev, {...result, selected: true}]));
+      setPreviousSearches((prev) => ([...prev, { ...result, selected: true }]));
       const idToRemove = result.id;
       const newDB = dbData.filter(obj => obj.id !== idToRemove);
       setdbData(newDB)
-    }     
-    
+    }
+
     setShowOptions(false);
     setShowResults(true);
     setQuery(result.title);
@@ -78,7 +78,7 @@ const SearchEngine = () => {
     setTimeout(() => {
       setShowOptions(false);
     }, 100)
-    
+
   };
 
   const handleDelete = (id) => {
@@ -103,39 +103,37 @@ const SearchEngine = () => {
 
   return (
     <div className='container'>
-        <div className='row justify-content-center '>
-            <div className='col-12 col-lg-4 column'>
+      <div className='row justify-content-center '>
+        <div className='col-12 col-lg-4'>
+          <div style={{ position: 'relative' }}>
             <input
-                type="text"
-                value={query}
-                onChange={handleInputChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                autoFocus
+              type="text"
+              value={query}
+              onChange={handleInputChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              autoFocus
             />
-            </div>
-        </div>
-        <div className='row justify-content-center '>
-            <div className='col-12 col-lg-4 column'>
             {showOptions && (
-                <ul>
-                  {results.slice(0, 10).map((result) => (
-                      
-                          <li
-                              key={result.id}
-                              onClick={() => handleResultClick(result)}
-                              >
-                              <i className="bi bi-search"></i> 
-                              <span style={result.selected ? {marginLeft:'10px', color:'red'}: {marginLeft:'10px'}}>{result.title}</span>
-                              {result.selected && <span className='removeButton' onClick={() => {handleDelete(result.id)}}><i className="bi bi-x"></i></span>}
-                          </li>
-                  ))}
-                </ul>
+              <ul>
+                {results.slice(0, 10).map((result) => (
+
+                  <li
+                    key={result.id}
+                    onClick={() => handleResultClick(result)}
+                  >
+                    <i className="bi bi-search"></i>
+                    <span style={result.selected ? { marginLeft: '10px', color: 'red' } : { marginLeft: '10px' }}>{result.title}</span>
+                    {result.selected && <span className='removeButton' onClick={() => { handleDelete(result.id) }}><i className="bi bi-x"></i></span>}
+                  </li>
+                ))}
+              </ul>
             )}
-            </div>
-            </div>
-            {showResults ? <Results data={commonSearches.newArr} timeElapsed={commonSearches.timeElapsed}/>: ''}
-            
+          </div>
+        </div>
+      </div>
+      {showResults ? <Results data={commonSearches.newArr} timeElapsed={commonSearches.timeElapsed} /> : ''}
+
     </div>
   );
 };
