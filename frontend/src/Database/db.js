@@ -95,6 +95,14 @@ const db = [
       'Learn how to use ReactJS server-side rendering with Next.js, a popular React framework. Discover how to create dynamic web applications that are optimized for search engines and social media.',
     link: 'https://cssinjs.org/react-jss/?v=v10.10.0'
   },
+  {
+    id: 13,
+    title: 'ReactJS Advanced',
+    selected: false,
+    description:
+      'Learn how to use ReactJS server-side rendering with Next.js, a popular React framework. Discover how to create dynamic web applications that are optimized for search engines and social media.',
+    link: 'https://cssinjs.org/react-jss/?v=v10.10.0'
+  },
 ];
 
 export default db;

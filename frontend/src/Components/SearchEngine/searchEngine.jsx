@@ -102,10 +102,11 @@ const SearchEngine = () => {
   };
 
   return (
-    <div className='container'>
+    <div className='container mt-5'>
       <div className='row justify-content-center '>
         <div className='col-12 col-lg-4'>
           <div style={{ position: 'relative' }}>
+          <i className="bi bi-search icon"></i>
             <input
               type="text"
               value={query}
@@ -114,6 +115,7 @@ const SearchEngine = () => {
               onBlur={handleBlur}
               autoFocus
             />
+            <i class="bi bi-mic icon-mic"></i>
             {showOptions && (
               <ul>
                 {results.slice(0, 10).map((result) => (
